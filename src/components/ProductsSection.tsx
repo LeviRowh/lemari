@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
-import { ShoppingBag, X, Plus, Minus } from "lucide-react";
+import { ShoppingBag } from "lucide-react";
+import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -81,6 +82,16 @@ const ProductsSection = ({ onCartUpdate }: ProductsSectionProps) => {
   const [cart, setCart] = useState<CartItem[]>([]);
   const sectionRef = useRef<HTMLElement>(null);
   const productRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const [scrollY, setScrollY] = useState(0);
+
+  // Parallax scroll tracking
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrollY(window.scrollY);
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -99,6 +110,24 @@ const ProductsSection = ({ onCartUpdate }: ProductsSectionProps) => {
     });
 
     return () => observer.disconnect();
+  }, []);
+
+  // Image parallax effect
+  useEffect(() => {
+    const handleImageParallax = () => {
+      productRefs.current.forEach((ref) => {
+        if (!ref) return;
+        const rect = ref.getBoundingClientRect();
+        const img = ref.querySelector("img");
+        if (img && rect.top < window.innerHeight && rect.bottom > 0) {
+          const parallaxOffset = (rect.top - window.innerHeight / 2) * 0.08;
+          img.style.transform = `translateY(${parallaxOffset}px) scale(1.1)`;
+        }
+      });
+    };
+
+    window.addEventListener("scroll", handleImageParallax, { passive: true });
+    return () => window.removeEventListener("scroll", handleImageParallax);
   }, []);
 
   const addToCart = (product: Product) => {
@@ -122,15 +151,20 @@ const ProductsSection = ({ onCartUpdate }: ProductsSectionProps) => {
   return (
     <section id="products" ref={sectionRef} className="py-24 md:py-32 px-4 md:px-8">
       <div className="max-w-7xl mx-auto">
-        {/* Section Header */}
-        <div className="text-center mb-16 md:mb-24">
+        {/* Section Header with Parallax */}
+        <motion.div
+          className="text-center mb-16 md:mb-24"
+          style={{
+            transform: `translateY(${(scrollY - 800) * 0.05}px)`,
+          }}
+        >
           <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl font-light tracking-wide mb-4">
             The Collection
           </h2>
           <p className="text-muted-foreground text-sm tracking-wider uppercase">
             Curated essentials for every moment
           </p>
-        </div>
+        </motion.div>
 
         {/* Products Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
@@ -145,7 +179,7 @@ const ProductsSection = ({ onCartUpdate }: ProductsSectionProps) => {
                 <img
                   src={product.image}
                   alt={product.name}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover transition-transform duration-1000 ease-out will-change-transform"
                   loading="lazy"
                 />
                 {/* Overlay */}
