@@ -1,8 +1,23 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { motion } from "framer-motion";
 
 const AboutSection = () => {
   const sectionRef = useRef<HTMLElement>(null);
   const elementsRef = useRef<(HTMLElement | null)[]>([]);
+  const [scrollY, setScrollY] = useState(0);
+  const [sectionTop, setSectionTop] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrollY(window.scrollY);
+      if (sectionRef.current) {
+        setSectionTop(sectionRef.current.offsetTop);
+      }
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -23,48 +38,74 @@ const AboutSection = () => {
     return () => observer.disconnect();
   }, []);
 
+  // Calculate parallax offset relative to section
+  const relativeScroll = scrollY - sectionTop + window.innerHeight;
+  const parallaxOffset = relativeScroll * 0.05;
+
   return (
     <section
       ref={sectionRef}
-      className="py-24 md:py-32 px-4 md:px-8 bg-charcoal"
+      className="py-24 md:py-32 px-4 md:px-8 bg-charcoal relative overflow-hidden"
     >
-      <div className="max-w-4xl mx-auto text-center">
+      {/* Background Parallax Element */}
+      <motion.div
+        className="absolute inset-0 opacity-5"
+        style={{
+          backgroundImage: `radial-gradient(circle at 50% 50%, hsl(var(--foreground)) 1px, transparent 1px)`,
+          backgroundSize: "40px 40px",
+          transform: `translateY(${-parallaxOffset}px)`,
+        }}
+      />
+
+      <div className="max-w-4xl mx-auto text-center relative z-10">
         {/* Section Title */}
-        <h2
+        <motion.h2
           ref={(el) => (elementsRef.current[0] = el)}
           className="reveal font-serif text-3xl md:text-4xl lg:text-5xl font-light tracking-wide mb-8"
+          style={{
+            transform: `translateY(${parallaxOffset * 0.3}px)`,
+          }}
         >
           The Philosophy
-        </h2>
+        </motion.h2>
 
         {/* Main Text */}
-        <p
+        <motion.p
           ref={(el) => (elementsRef.current[1] = el)}
           className="reveal text-lg md:text-xl font-light leading-relaxed text-foreground/80 mb-8"
-          style={{ transitionDelay: "100ms" }}
+          style={{ 
+            transitionDelay: "100ms",
+            transform: `translateY(${parallaxOffset * 0.2}px)`,
+          }}
         >
           Lemari was born from a singular belief: that exceptional quality and 
           timeless design should form the foundation of every wardrobe. We create 
           pieces that transcend seasons and trends, crafted to become the building 
           blocks of your personal style.
-        </p>
+        </motion.p>
 
-        <p
+        <motion.p
           ref={(el) => (elementsRef.current[2] = el)}
           className="reveal text-base md:text-lg font-light leading-relaxed text-muted-foreground mb-12"
-          style={{ transitionDelay: "200ms" }}
+          style={{ 
+            transitionDelay: "200ms",
+            transform: `translateY(${parallaxOffset * 0.15}px)`,
+          }}
         >
           Each garment is thoughtfully designed with an obsessive attention to detail—from 
           the weight of the fabric to the precision of every seam. We partner with the world's 
           finest mills and ateliers, ensuring that every piece not only looks beautiful but 
           feels extraordinary against your skin.
-        </p>
+        </motion.p>
 
         {/* Values */}
-        <div
+        <motion.div
           ref={(el) => (elementsRef.current[3] = el)}
           className="reveal grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 mt-16"
-          style={{ transitionDelay: "300ms" }}
+          style={{ 
+            transitionDelay: "300ms",
+            transform: `translateY(${parallaxOffset * 0.1}px)`,
+          }}
         >
           <div>
             <h3 className="font-serif text-xl mb-3">Quality</h3>
@@ -84,13 +125,16 @@ const AboutSection = () => {
               Designed to mix, match, and adapt to your life
             </p>
           </div>
-        </div>
+        </motion.div>
 
         {/* Quote */}
-        <blockquote
+        <motion.blockquote
           ref={(el) => (elementsRef.current[4] = el)}
           className="reveal mt-20 pt-12 border-t border-border/30"
-          style={{ transitionDelay: "400ms" }}
+          style={{ 
+            transitionDelay: "400ms",
+            transform: `translateY(${parallaxOffset * 0.05}px)`,
+          }}
         >
           <p className="font-serif text-xl md:text-2xl italic font-light text-foreground/70">
             "Less, but better."
@@ -98,7 +142,7 @@ const AboutSection = () => {
           <cite className="block mt-4 text-xs tracking-luxury uppercase text-muted-foreground not-italic">
             — Lemari Philosophy
           </cite>
-        </blockquote>
+        </motion.blockquote>
       </div>
     </section>
   );

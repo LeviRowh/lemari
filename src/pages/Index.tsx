@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { ShoppingBag } from "lucide-react";
+import { motion } from "framer-motion";
 import NotificationBar from "@/components/NotificationBar";
 import HeroSection from "@/components/HeroSection";
 import ProductsSection, { type CartItem } from "@/components/ProductsSection";
+import LookbookGallery from "@/components/LookbookGallery";
 import CheckoutModal from "@/components/CheckoutModal";
 import AboutSection from "@/components/AboutSection";
 import NotificationPreferences from "@/components/NotificationPreferences";
@@ -24,15 +26,19 @@ const Index = () => {
 
       {/* Floating Cart Button */}
       {totalItems > 0 && (
-        <button
+        <motion.button
+          initial={{ scale: 0, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          exit={{ scale: 0, opacity: 0 }}
+          transition={{ type: "spring", stiffness: 300, damping: 25 }}
           onClick={() => setIsCheckoutOpen(true)}
-          className="fixed bottom-8 right-8 z-40 flex items-center gap-2 bg-foreground text-background px-6 py-4 shadow-2xl hover:bg-foreground/90 transition-all duration-300 animate-scale-in"
+          className="fixed bottom-8 right-8 z-40 flex items-center gap-2 bg-foreground text-background px-6 py-4 shadow-2xl hover:bg-foreground/90 transition-all duration-300"
         >
           <ShoppingBag className="w-5 h-5" />
           <span className="text-sm tracking-wider uppercase">
             Bag ({totalItems})
           </span>
-        </button>
+        </motion.button>
       )}
 
       {/* Hero Section */}
@@ -40,6 +46,9 @@ const Index = () => {
 
       {/* Products Section */}
       <ProductsSection onCartUpdate={setCartItems} />
+
+      {/* Lookbook Gallery */}
+      <LookbookGallery />
 
       {/* About Section */}
       <AboutSection />
