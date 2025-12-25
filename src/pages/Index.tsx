@@ -9,6 +9,7 @@ import CheckoutModal from "@/components/CheckoutModal";
 import AboutSection from "@/components/AboutSection";
 import NotificationPreferences from "@/components/NotificationPreferences";
 import Footer from "@/components/Footer";
+import NewsletterPopup from "@/components/NewsletterPopup";
 
 const Index = () => {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
@@ -66,6 +67,9 @@ const Index = () => {
         cartItems={cartItems}
         onUpdateCart={setCartItems}
       />
+
+      {/* Newsletter Popup - appears after 30 seconds */}
+      <NewsletterPopup delaySeconds={30} />
     </div>
   );
 };

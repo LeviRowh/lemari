@@ -47,13 +47,30 @@ const AboutSection = () => {
       ref={sectionRef}
       className="py-24 md:py-32 px-4 md:px-8 bg-charcoal relative overflow-hidden"
     >
-      {/* Background Parallax Element */}
+      {/* Chrome Hearts-inspired flowing organic background */}
       <motion.div
-        className="absolute inset-0 opacity-5"
+        className="absolute inset-0 opacity-[0.08]"
         style={{
-          backgroundImage: `radial-gradient(circle at 50% 50%, hsl(var(--foreground)) 1px, transparent 1px)`,
-          backgroundSize: "40px 40px",
-          transform: `translateY(${-parallaxOffset}px)`,
+          backgroundImage: `
+            radial-gradient(ellipse 80% 50% at 20% 40%, hsl(var(--foreground)) 0%, transparent 50%),
+            radial-gradient(ellipse 60% 80% at 80% 20%, hsl(var(--foreground)) 0%, transparent 45%),
+            radial-gradient(ellipse 70% 60% at 60% 80%, hsl(var(--foreground)) 0%, transparent 40%)
+          `,
+          transform: `translateY(${-parallaxOffset * 0.5}px) scale(${1 + parallaxOffset * 0.001})`,
+          filter: 'blur(40px)',
+        }}
+      />
+      
+      {/* Subtle flowing curves overlay */}
+      <motion.div
+        className="absolute inset-0 opacity-[0.04]"
+        style={{
+          backgroundImage: `
+            radial-gradient(ellipse 120% 100% at 30% 100%, hsl(var(--foreground)) 0%, transparent 60%),
+            radial-gradient(ellipse 100% 120% at 70% 0%, hsl(var(--foreground)) 0%, transparent 50%)
+          `,
+          transform: `translateY(${parallaxOffset * 0.3}px)`,
+          filter: 'blur(60px)',
         }}
       />
 
