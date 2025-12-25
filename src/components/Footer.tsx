@@ -1,5 +1,6 @@
 import { Instagram, Twitter } from "lucide-react";
 import lemariLogo from "@/assets/lemari-logo.png";
+import PaymentIcons from "./PaymentIcons";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -78,6 +79,13 @@ const Footer = () => {
               </ul>
             </div>
           ))}
+        </div>
+      </div>
+
+      {/* Payment Methods */}
+      <div className="border-t border-border/20">
+        <div className="max-w-7xl mx-auto px-4 md:px-8 py-6 flex justify-center">
+          <PaymentIcons className="opacity-60" />
         </div>
       </div>
 
